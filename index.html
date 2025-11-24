@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 Calendario de Adviento: Diciembre 🌟</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌟%3C/text%3E%3C/svg%3E">
+    <style>
+        /* ==================================== */
+        /* === 1. Estilos Globales y Paleta === */
+        /* ==================================== */
+
+        :root {
+            /* Paleta de colores navideña y elegante */
+            --color-rojo-base: #B71C1C; /* Rojo Borgoña */
+            --color-rojo-claro: #E57373;
+            --color-dorado-base: #FFD700; /* Oro Puro */
+            --color-dorado-brillo: #FFFACD; /* Dorado Claro */
+            --color-fondo: #F5F5F5; /* Fondo suave */
+            --color-texto-principal: #333333;
+            --sombra-suave: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Georgia', serif; /* Fuente clásica y elegante */
+            background-color: var(--color-fondo);
+            color: var(--color-texto-principal);
+            line-height: 1.6;
+            padding: 20px;
+            background-image: linear-gradient(135deg, var(--color-fondo) 0%, #ffffff 50%, var(--color-fondo) 100%);
+        }
+
+        /* =================================== */
+        /* === 2. Estilos del Encabezado y === */
+        /* =================================== */
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(to right, var(--color-rojo-base), #D32F2F);
+            color: var(--color-dorado-brillo);
+            border-radius: 15px;
+            box-shadow: var(--sombra-suave);
+            border: 2px solid var(--color-dorado-base);
+        }
+
+        .header h1 {
+            font-family: 'Brush Script MT', cursive; /* Fuente script para un toque personal */
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-style: italic;
+            margin-top: 5px;
+            font-size: 1.1em;
+        }
+
+        /* ========================================= */
+        /* === 3. Estilos de la Cuadrícula (Días) === */
+        /* ========================================= */
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 120px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: var(--sombra-suave);
+            border: 1px solid rgba(255, 255, 255, 0.5); /* Borde sutil */
+        }
+
+        .day-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .day-label {
+            font-size: 0.8em;
+            text-transform: uppercase;
+        }
+
+        /* Días Desbloqueados (Pasados y Actual) */
+        .day.unlocked {
+            background: linear-gradient(145deg, var(--color-rojo-base), var(--color-rojo-claro));
+            color: var(--color-dorado-brillo);
+            border: 3px solid var(--color-dorado-base);
+            box-shadow: 0 0 10px var(--color-dorado-base), 0 0 20px var(--color-rojo-claro);
+        }
+
+        .day.unlocked:hover {
+            transform: scale(1.05) rotate(-1deg);
+            background: linear-gradient(145deg, #CC0000, #F44336); /* Rojo más intenso al pasar el ratón */
+            box-shadow: 0 0 15px var(--color-dorado-base), 0 0 30px var(--color-dorado-base);
+        }
+
+        /* Día Actual - Resaltado Especial */
+        .day.today {
+            background: var(--color-dorado-base);
+            color: var(--color-rojo-base);
+            border: 4px solid var(--color-rojo-base);
+            animation: pulse-gold 2s infinite alternate;
+        }
+
+        .day.today:hover {
+            transform: scale(1.08) rotate(1deg);
+        }
+
+        /* Días Bloqueados (Futuros) */
+        .day.locked {
+            background-color: #AAAAAA; /* Gris oscuro para el sello de cera */
+            color: #E0E0E0;
+            cursor: not-allowed;
+            opacity: 0.6;
+            position: relative;
+            overflow: hidden;
+            pointer-events: none; /* Asegura que no se pueda hacer clic */
+        }
+
+        /* Estilo para el "sello" o "lacre" en el día bloqueado */
+        .day.locked::before {
+            content: '🔒'; /* Icono de candado */
+            font-size: 3em;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #424242; /* Color oscuro */
+            z-index: 2;
+        }
+        
+        .day.locked .day-number, .day.locked .day-label {
+            visibility: hidden; /* Oculta el número y etiqueta detrás del candado */
+        }
+
+        /* Animación sutil de brillo dorado */
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 8px var(--color-dorado-base), 0 0 12px rgba(255, 215, 0, 0.5); }
+            100% { box-shadow: 0 0 12px var(--color-dorado-base), 0 0 20px var(--color-dorado-base); }
+        }
+
+        /* =================================== */
+        /* === 4. Estilos del Modal (Pop-up) === */
+        /* =================================== */
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none; /* Oculto por defecto */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            color: var(--color-texto-principal);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.8);
+            opacity: 0;
+            transition: all 0.3s ease-out;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 5px solid var(--color-rojo-base);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--color-rojo-base);
+            padding-bottom: 10px;
+        }
+
+        .modal-header h2 {
+            color: var(--color-rojo-base);
+            font-size: 1.8em;
+        }
+
+        .close-button {
+            background: var(--color-dorado-base);
+            color: var(--color-rojo-base);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 1.2em;
+            line-height: 1;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: bold;
+        }
+
+        .close-button:hover {
+            background: var(--color-rojo-claro);
+            color: var(--color-dorado-brillo);
+        }
+
+        .modal-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 3px solid var(--color-dorado-base);
+        }
+
+        .modal-message {
+            font-size: 1.2em;
+            font-style: italic;
+            text-align: center;
+            padding: 10px;
+            background-color: var(--color-dorado-brillo);
+            border-radius: 8px;
+            color: var(--color-rojo-base);
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ============================== */
+        /* === 5. Media Queries (RWD) === */
+        /* ============================== */
+
+        @media (min-width: 768px) {
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr); /* 7 columnas para vista de escritorio */
+                gap: 20px;
+            }
+
+            .day {
+                height: 150px;
+            }
+
+            .header h1 {
+                font-size: 3.5em;
+            }
+
+            .modal-content {
+                max-width: 600px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .calendar-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <h1>Mi Calendario de Adviento ❤️</h1>
+        <p>Una sorpresa especial te espera cada día de diciembre.</p>
+    </header>
+
+    <main class="calendar-grid" id="calendarGrid">
+        </main>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <button class="close-button" id="closeModalButton">&times;</button>
+            </div>
+            <img src="" alt="Foto del día" class="modal-image" id="modalImage">
+            <p class="modal-message" id="modalMessage"></p>
+        </div>
+    </div>
+
+    <script>
+        /* =========================================== */
+        /* === ESTRUCTURA DE CONTENIDO PERSONALIZABLE === */
+        /* =========================================== */
+
+        /**
+         * 💡 INSTRUCCIONES DE PERSONALIZACIÓN:
+         * * 1. 📂 ESTRUCTURA DE CARPETAS RECOMENDADA EN GITHUB:
+         * - Crea una carpeta llamada `images` en la raíz de tu repositorio.
+         * - Sube tus 31 fotos (nombradas, por ejemplo: `photo1.jpg`, `photo2.jpg`, etc.) a esa carpeta.
+         * * 2. 📸 ACTUALIZAR RUTAS DE IMAGEN (IMAGENES_DIARIAS):
+         * - Reemplaza las rutas placeholder ('images/photoX.jpg') con las rutas reales
+         * de las 31 fotos que subiste. Asegúrate de que el orden (índice 0 = Día 1, índice 30 = Día 31) sea correcto.
+         * * 3. 📝 EDITAR FRASES (FRASES_DIARIAS):
+         * - Reemplaza las frases de ejemplo con tus 31 mensajes especiales y románticos.
+         * ¡Sé creativo!
+         */
+
+        const IMAGENES_DIARIAS = [
+            'images/photo1.jpg',   // Día 1
+            'images/photo2.jpg',   // Día 2
+            'images/photo3.jpg',   // Día 3
+            'images/photo4.jpg',   // Día 4
+            'images/photo5.jpg',   // Día 5
+            'images/photo6.jpg',   // Día 6
+            'images/photo7.jpg',   // Día 7
+            'images/photo8.jpg',   // Día 8
+            'images/photo9.jpg',   // Día 9
+            'images/photo10.jpg',  // Día 10
+            'images/photo11.jpg',  // Día 11
+            'images/photo12.jpg',  // Día 12
+            'images/photo13.jpg',  // Día 13
+            'images/photo14.jpg',  // Día 14
+            'images/photo15.jpg',  // Día 15
+            'images/photo16.jpg',  // Día 16
+            'images/photo17.jpg',  // Día 17
+            'images/photo18.jpg',  // Día 18
+            'images/photo19.jpg',  // Día 19
+            'images/photo20.jpg',  // Día 20
+            'images/photo21.jpg',  // Día 21
+            'images/photo22.jpg',  // Día 22
+            'images/photo23.jpg',  // Día 23
+            'images/photo24.jpg',  // Día 24 - Nochebuena
+            'images/photo25.jpg',  // Día 25 - Navidad
+            'images/photo26.jpg',  // Día 26
+            'images/photo27.jpg',  // Día 27
+            'images/photo28.jpg',  // Día 28
+            'images/photo29.jpg',  // Día 29
+            'images/photo30.jpg',  // Día 30
+            'images/photo31.jpg'   // Día 31 - Nochevieja
+        ];
+
+        // 31 frases de ejemplo románticas y navideñas
+        const FRASES_DIARIAS = [
+            'Día 1: Mi diciembre favorito, porque lo comparto contigo. ¡Empezamos la cuenta atrás!',
+            'Día 2: Tu sonrisa es mi mejor regalo de Navidad, mi amor.',
+            'Día 3: Cada día a tu lado se siente como una cálida tarde junto a la chimenea.',
+            'Día 4: Recordando nuestros mejores momentos. Hay muchos más por crear este mes.',
+            'Día 5: Eres mi luz en el invierno, la estrella que guía mi camino.',
+            'Día 6: No hay frío que me afecte si tengo tus abrazos. ¡Te adoro!',
+            'Día 7: Siete días y ya siento la magia. Eres mi pequeña gran aventura.',
+            'Día 8: Eres la melodía que le faltaba a mi villancico favorito.',
+            'Día 9: Un día más para agradecer por tenerte en mi vida. Gracias por ser tú.',
+            'Día 10: Diez razones para amarte... y me faltan 365 días del año.',
+            'Día 11: Pensando en ti, el café de la mañana sabe mucho mejor.',
+            'Día 12: Que la alegría de este mes nos una aún más, mi corazón.',
+            'Día 13: Eres el jengibre de mi galleta, la chispa de mi celebración.',
+            'Día 14: La Navidad es un estado mental, pero tú eres mi estado de felicidad.',
+            'Día 15: Mitad de mes, mitad de camino. No puedo esperar para ver lo que viene.',
+            'Día 16: Tu amor es el regalo más grande. Nunca lo olvides.',
+            'Día 17: Gracias por cada risa, cada mirada, cada pequeño detalle.',
+            'Día 18: Que la paz de la Navidad llene nuestro hogar de calidez y amor.',
+            'Día 19: Mi deseo de Navidad ya se ha cumplido, porque estás aquí.',
+            'Día 20: Faltan pocos días para la gran noche. Eres mi mejor plan.',
+            'Día 21: El solsticio de invierno marca el regreso de la luz, y tú eres mi luz eterna.',
+            'Día 22: Dos días para Nochebuena. La emoción crece, como mi amor por ti.',
+            'Día 23: Siempre hay magia a tu alrededor. Es increíble cómo iluminas todo.',
+            'Día 24: ¡Nochebuena! Eres mi tradición favorita y mi regalo eterno.',
+            'Día 25: ¡Feliz Navidad! Abrir regalos es divertido, pero despertar a tu lado es la verdadera felicidad.',
+            'Día 26: Deseando que la magia navideña dure todo el año. Contigo, es posible.',
+            'Día 27: El tiempo se detiene cuando estamos juntos. Es mi momento favorito del día.',
+            'Día 28: Recordando todos los momentos divertidos y locos que hemos compartido.',
+            'Día 29: Pensando en todo lo que hemos logrado y todo lo que nos queda por hacer.',
+            'Día 30: Un año increíble que termina. Eres mi compañera de vida y mi mejor amiga.',
+            'Día 31: ¡Feliz Nochevieja! Brindo por un nuevo año lleno de amor, sueños y tú. Te amo.'
+        ];
+
+
+        /* ================================== */
+        /* === LÓGICA DEL CALENDARIO (JS) === */
+        /* ================================== */
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const calendarGrid = document.getElementById('calendarGrid');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const closeModalButton = document.getElementById('closeModalButton');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalImage = document.getElementById('modalImage');
+            const modalMessage = document.getElementById('modalMessage');
+
+            // Obtener la fecha actual del sistema
+            const now = new Date();
+            const currentMonth = now.getMonth(); // 0 (Enero) a 11 (Diciembre)
+            const currentDay = now.getDate();   // 1 a 31
+            const isDecember = currentMonth === 11; // true si es Diciembre
+
+            /**
+             * Genera y renderiza los 31 días del calendario.
+             */
+            function renderCalendar() {
+                // El calendario va del 1 al 31
+                for (let day = 1; day <= 31; day++) {
+                    const dayElement = document.createElement('div');
+                    dayElement.classList.add('day');
+                    dayElement.dataset.day = day;
+
+                    // Lógica para determinar el estado: locked, unlocked, o today
+                    let isLocked = true;
+                    if (isDecember) {
+                        // Desbloqueado si el día es menor o igual al día actual
+                        isLocked = day > currentDay;
+                        
+                        if (day < currentDay) {
+                             dayElement.classList.add('unlocked'); // Pasado
+                        } else if (day === currentDay) {
+                             dayElement.classList.add('today');    // Hoy
+                             dayElement.classList.add('unlocked');
+                        } else {
+                            dayElement.classList.add('locked'); // Futuro
+                        }
+                    } else if (day < 1) { // Si no es Diciembre, todos están bloqueados (excepto para testear)
+                         dayElement.classList.add('locked');
+                    } else { // Si es cualquier otro mes, todos bloqueados
+                        dayElement.classList.add('locked');
+                    }
+                    
+                    if (!isLocked) {
+                         // Asignar el evento click solo a los días desbloqueados
+                         dayElement.addEventListener('click', () => openDayContent(day));
+                    }
+
+
+                    dayElement.innerHTML = `
+                        <span class="day-number">${day}</span>
+                        <span class="day-label">Diciembre</span>
+                    `;
+
+                    calendarGrid.appendChild(dayElement);
+                }
+            }
+
+            /**
+             * Muestra el modal con la foto y frase del día seleccionado.
+             * @param {number} day - El número del día (1 a 31).
+             */
+            function openDayContent(day) {
+                // El índice del array es 'día - 1'
+                const contentIndex = day - 1; 
+
+                // Llenar el modal con el contenido
+                modalTitle.textContent = `Día ${day}`;
+                modalImage.src = IMAGENES_DIARIAS[contentIndex];
+                modalImage.alt = `Foto del día ${day}`;
+                modalMessage.textContent = FRASES_DIARIAS[contentIndex];
+
+                // Mostrar el modal
+                modalOverlay.style.display = 'flex';
+                // Añadir clase para la animación CSS
+                setTimeout(() => {
+                    modalOverlay.classList.add('active');
+                }, 10); // Pequeño retraso para asegurar la transición
+            }
+
+            /**
+             * Cierra el modal.
+             */
+            function closeDayContent() {
+                 // Quitar clase para la animación CSS
+                modalOverlay.classList.remove('active');
+                // Ocultar el modal después de la animación
+                setTimeout(() => {
+                    modalOverlay.style.display = 'none';
+                }, 300);
+            }
+
+            // Asignar eventos para cerrar el modal
+            closeModalButton.addEventListener('click', closeDayContent);
+            modalOverlay.addEventListener('click', (e) => {
+                // Cerrar si se hace clic en el fondo oscuro
+                if (e.target === modalOverlay) {
+                    closeDayContent();
+                }
+            });
+
+            // Iniciar la generación del calendario
+            renderCalendar();
+        });
+    </script>
+</body>
+</html>
