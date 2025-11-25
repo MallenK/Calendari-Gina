@@ -207,15 +207,17 @@
             color: var(--color-texto-principal);
             padding: 20px;
             border-radius: 15px;
-            max-width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
+            max-width: 95vw;      /* límite horizontal */
+            max-height: 95vh;     /* límite vertical */
+            width: auto;          /* que se adapte al contenido */
+            overflow: auto;       /* scroll si se pasa del alto */
             position: relative;
             transform: scale(0.8);
             opacity: 0;
             transition: all 0.3s ease-out;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             border: 5px solid var(--color-rojo-base);
+            display: inline-block; /* que “abrace” el contenido */
         }
 
         .modal-overlay.active .modal-content {
@@ -257,13 +259,17 @@
         }
 
         .modal-image {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
+            display: block;
+            max-width: 100%;   /* no superar el ancho del modal */
+            max-height: 70vh;  /* no superar el alto de la pantalla */
+            width: auto;       /* respetar proporciones */
+            height: auto;      /* respetar proporciones */
             border-radius: 10px;
-            margin-bottom: 15px;
+            margin: 0 auto 15px;
             border: 3px solid var(--color-dorado-base);
+            object-fit: contain; /* encajar la imagen dentro sin recortar */
         }
+
 
         .modal-message {
             font-size: 1.2em;
@@ -350,7 +356,7 @@
          */
 
         const IMATGES_DIARIES = [
-            'images/photo1.jpg',   // Dia 1
+            'images/IMG_1.webp',   // Dia 1
             'images/photo2.jpg',   // Dia 2
             'images/photo3.jpg',   // Dia 3
             'images/photo4.jpg',   // Dia 4
@@ -516,18 +522,50 @@
         function openDayContent(day) {
             const contentIndex = day - 1; 
 
-            // Omplir el modal amb el contingut
             modalTitle.textContent = `Dia ${day}`;
-            modalImage.src = IMATGES_DIARIES[contentIndex];
-            modalImage.alt = `Foto del dia ${day}`;
             modalMessage.textContent = FRASES_DIARIES[contentIndex];
 
-            // Mostrar el modal
+            // Rutas con nombres distintos:
+            const jpgPath  = `images/IMG-${day}.jpg`; // con guion
+            const webpPath = `images/IMG_${day}.webp`; // con guion bajo
+
+            // Limpiamos manejador de error previo
+            modalImage.onerror = null;
+
+            // Intentar primero JPG
+            modalImage.src = jpgPath;
+
+            // Si falla el JPG → probar WEBP
+            modalImage.onerror = function () {
+                modalImage.onerror = null; // evitar bucle
+                modalImage.src = webpPath;
+            };
+
             modalOverlay.style.display = 'flex';
             setTimeout(() => {
                 modalOverlay.classList.add('active');
             }, 10);
         }
+
+
+        /**
+         * Retorna la ruta correcta de la imatge del dia:
+         * IMG-X.jpg si existeix, sinó IMG-X.webp
+         */
+        async function getImageForDay(day) {
+            const jpg = `images/IMG-${day}.jpg`;
+            const webp = `images/IMG-${day}.webp`;
+
+            try {
+                const res = await fetch(jpg, { method: 'HEAD' });
+                if (res.ok) return jpg;
+                return webp;
+            } catch {
+                return webp;
+            }
+        }
+
+
 
         /**
          * Tanca el modal.
