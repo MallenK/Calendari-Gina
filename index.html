@@ -525,27 +525,40 @@
             modalTitle.textContent = `Dia ${day}`;
             modalMessage.textContent = FRASES_DIARIES[contentIndex];
 
-            // Rutas con nombres distintos:
-            const jpgPath  = `images/IMG-${day}.jpg`; // con guion
-            const webpPath = `images/IMG_${day}.webp`; // con guion bajo
+            // Todas las combinaciones posibles
+            const candidates = [
+                `images/IMG-${day}.jpg`,
+                `images/IMG_${day}.jpg`,
+                `images/IMG-${day}.webp`,
+                `images/IMG_${day}.webp`
+            ];
 
-            // Limpiamos manejador de error previo
-            modalImage.onerror = null;
+            let index = 0;
 
-            // Intentar primero JPG
-            modalImage.src = jpgPath;
+            // Función recursiva para ir probando una a una
+            function tryNext() {
+                if (index >= candidates.length) {
+                    modalImage.src = ""; 
+                    console.warn("⚠ No s'ha trobat cap imatge per al dia", day);
+                    return;
+                }
 
-            // Si falla el JPG → probar WEBP
-            modalImage.onerror = function () {
-                modalImage.onerror = null; // evitar bucle
-                modalImage.src = webpPath;
-            };
+                const src = candidates[index];
+                index++;
+
+                // Intentar cargar la imagen
+                modalImage.onerror = tryNext;
+                modalImage.src = src;
+            }
+
+            tryNext(); // iniciar comprobación
 
             modalOverlay.style.display = 'flex';
             setTimeout(() => {
                 modalOverlay.classList.add('active');
             }, 10);
         }
+
 
 
         /**
