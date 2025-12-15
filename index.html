@@ -310,6 +310,19 @@
                 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             }
         }
+
+        @keyframes celebration-shake {
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.02) rotate(0.5deg); }
+            50% { transform: scale(1.04) rotate(-0.5deg); }
+            75% { transform: scale(1.02) rotate(0.5deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        
+        .modal-content.celebrating {
+            animation: celebration-shake 0.6s ease-in-out infinite;
+        }
+
     </style>
 </head>
 <body>
@@ -525,10 +538,18 @@
             modalTitle.textContent = `Dia ${day}`;
             modalMessage.textContent = FRASES_DIARIES[contentIndex];
 
-            // Celebración especial para días 5 y 16
             if (day === 5 || day === 16) {
+                modalOverlay.querySelector('.modal-content')
+                    .classList.add('celebrating');
+            
                 lanzarCelebracion();
+            
+                setTimeout(() => {
+                    modalOverlay.querySelector('.modal-content')
+                        .classList.remove('celebrating');
+                }, 12000);
             }
+
 
             // Todas las combinaciones posibles
             const candidates = [
@@ -596,25 +617,68 @@
         }
 
         function lanzarCelebracion() {
-            const duration = 3000;
+            const duration = 12000; // 12 segundos
             const end = Date.now() + duration;
         
-            (function frame() {
+            const colors = [
+                '#FFD700', // dorado
+                '#B71C1C', // rojo
+                '#E57373', // rojo claro
+                '#FFFFFF', // blanco
+                '#FF4081'  // rosa
+            ];
+        
+            // Explosión inicial brutal
+            confetti({
+                particleCount: 300,
+                spread: 360,
+                startVelocity: 55,
+                gravity: 0.9,
+                colors,
+                origin: { x: 0.5, y: 0.6 }
+            });
+        
+            // Lluvia continua
+            (function rain() {
                 confetti({
-                    particleCount: 8,
-                    startVelocity: 25,
-                    spread: 360,
-                    ticks: 60,
-                    origin: {
-                        x: Math.random(),
-                        y: Math.random() - 0.2
-                    }
+                    particleCount: 15,
+                    angle: 90,
+                    spread: 120,
+                    startVelocity: 20,
+                    gravity: 1.2,
+                    ticks: 120,
+                    colors,
+                    origin: { x: Math.random(), y: -0.2 }
                 });
         
                 if (Date.now() < end) {
-                    requestAnimationFrame(frame);
+                    requestAnimationFrame(rain);
                 }
             })();
+        
+            // Explosiones laterales alternas
+            const interval = setInterval(() => {
+                confetti({
+                    particleCount: 80,
+                    angle: 60,
+                    spread: 55,
+                    startVelocity: 45,
+                    colors,
+                    origin: { x: 0 }
+                });
+        
+                confetti({
+                    particleCount: 80,
+                    angle: 120,
+                    spread: 55,
+                    startVelocity: 45,
+                    colors,
+                    origin: { x: 1 }
+                });
+            }, 1200);
+        
+            // Parar explosiones laterales
+            setTimeout(() => clearInterval(interval), duration);
         }
 
 
