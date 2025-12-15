@@ -550,9 +550,17 @@
                 }, 12000);
             }
 
-            if (day === 25 || day === 31 || day == 6) {
+            if (day === 25 || day == 6) {
                 modalOverlay.querySelector('.modal-content').classList.add('celebrating');
                 lanzarNavidad();
+                setTimeout(() => {
+                    modalOverlay.querySelector('.modal-content').classList.remove('celebrating');
+                }, 12000);
+            }
+
+            if (day === 31 || day == 7) {
+                modalOverlay.querySelector('.modal-content').classList.add('celebrating');
+                lanzarAnyNou();
                 setTimeout(() => {
                     modalOverlay.querySelector('.modal-content').classList.remove('celebrating');
                 }, 12000);
@@ -727,45 +735,166 @@
 
 
         function lanzarNavidad() {
-            const duration = 15000;
+            const duration = 20000;
             const end = Date.now() + duration;
         
-            const colors = ['#FFFFFF', '#FFFACD', '#FFD700'];
+            const snowColors = ['#FFFFFF', '#F5F5F5'];
+            const goldColors = ['#FFD700', '#FFFACD'];
+            const loveColors = ['#FF4081', '#E57373'];
         
-            const snowScalar = 1.8;
+            const big = 2.2; // tamaño GRANDE
         
+            /* ❄️ NIEVE GRANDE Y LENTA */
             (function snow() {
                 confetti({
-                    particleCount: 8,
+                    particleCount: 6,
                     startVelocity: 0,
-                    spread: 120,
-                    gravity: 0.3,
-                    ticks: 200,
-                    scalar: snowScalar,
-                    colors,
-                    origin: { x: Math.random(), y: -0.2 },
-                    shapes: ['circle']
+                    gravity: 0.25,
+                    ticks: 300,
+                    scalar: big,
+                    colors: snowColors,
+                    shapes: ['circle'],
+                    origin: { x: Math.random(), y: -0.2 }
                 });
         
-                if (Date.now() < end) {
-                    requestAnimationFrame(snow);
-                }
+                if (Date.now() < end) requestAnimationFrame(snow);
             })();
         
-            setInterval(() => {
+            /* ⭐ ESTRELLAS DORADAS */
+            const stars = setInterval(() => {
                 confetti({
-                    particleCount: 60,
+                    particleCount: 40,
                     spread: 360,
-                    startVelocity: 35,
-                    gravity: 1,
-                    scalar: snowScalar,
-                    colors: ['#FFD700', '#FFFACD'],
+                    startVelocity: 30,
+                    gravity: 0.9,
+                    scalar: big,
+                    colors: goldColors,
                     shapes: ['star'],
-                    origin: { x: Math.random(), y: Math.random() * 0.4 }
+                    origin: {
+                        x: Math.random(),
+                        y: Math.random() * 0.4
+                    }
                 });
-            }, 1200);
+            }, 1400);
+        
+            /* 🎁 REGALOS (cuadrados grandes) */
+            const gifts = setInterval(() => {
+                confetti({
+                    particleCount: 30,
+                    angle: 90,
+                    spread: 100,
+                    startVelocity: 25,
+                    gravity: 1.4,
+                    scalar: big,
+                    colors: ['#B71C1C', '#FFD700', '#FFFFFF'],
+                    shapes: ['square'],
+                    origin: { x: Math.random(), y: -0.2 }
+                });
+            }, 1600);
+        
+            /* ❤️ CORAZONES GRANDES */
+            const hearts = setInterval(() => {
+                confetti({
+                    particleCount: 25,
+                    spread: 80,
+                    startVelocity: 20,
+                    gravity: 0.6,
+                    scalar: big,
+                    colors: loveColors,
+                    shapes: ['heart'],
+                    origin: {
+                        x: Math.random(),
+                        y: Math.random() * 0.3
+                    }
+                });
+            }, 2000);
+        
+            setTimeout(() => {
+                clearInterval(stars);
+                clearInterval(gifts);
+                clearInterval(hearts);
+            }, duration);
         }
 
+
+        function lanzarAnyNou() {
+            const duration = 22000;
+            const end = Date.now() + duration;
+        
+            const colors = [
+                '#FFD700',
+                '#FF4081',
+                '#FFFFFF',
+                '#00E5FF',
+                '#B71C1C'
+            ];
+        
+            const big = 2.3;
+        
+            function megaFirework() {
+                confetti({
+                    particleCount: 300,
+                    spread: 360,
+                    startVelocity: 70,
+                    gravity: 0.9,
+                    scalar: big,
+                    colors,
+                    origin: {
+                        x: Math.random(),
+                        y: Math.random() * 0.5
+                    }
+                });
+            }
+        
+            megaFirework();
+        
+            const fireworks = setInterval(megaFirework, 1100);
+        
+            /* 🎊 CAÑONES CONTINUOS */
+            const cannons = setInterval(() => {
+                confetti({
+                    particleCount: 200,
+                    angle: 60,
+                    spread: 80,
+                    startVelocity: 55,
+                    scalar: big,
+                    colors,
+                    origin: { x: 0 }
+                });
+        
+                confetti({
+                    particleCount: 200,
+                    angle: 120,
+                    spread: 80,
+                    startVelocity: 55,
+                    scalar: big,
+                    colors,
+                    origin: { x: 1 }
+                });
+            }, 1500);
+        
+            /* ❤️ + ⭐ EXTRA */
+            const extras = setInterval(() => {
+                confetti({
+                    particleCount: 100,
+                    spread: 360,
+                    startVelocity: 35,
+                    scalar: big,
+                    shapes: ['heart', 'star'],
+                    colors,
+                    origin: {
+                        x: Math.random(),
+                        y: Math.random() * 0.4
+                    }
+                });
+            }, 2000);
+        
+            setTimeout(() => {
+                clearInterval(fireworks);
+                clearInterval(cannons);
+                clearInterval(extras);
+            }, duration);
+        }
 
 
 
