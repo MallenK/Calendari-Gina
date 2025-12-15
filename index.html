@@ -550,6 +550,15 @@
                 }, 12000);
             }
 
+            if (day === 25 || day === 31 || day == 6) {
+                modalOverlay.querySelector('.modal-content').classList.add('celebrating');
+                lanzarNavidad();
+                setTimeout(() => {
+                    modalOverlay.querySelector('.modal-content').classList.remove('celebrating');
+                }, 12000);
+            }
+
+
 
             // Todas las combinaciones posibles
             const candidates = [
@@ -715,6 +724,48 @@
                 clearInterval(randomBursts);
             }, duration);
         }
+
+
+        function lanzarNavidad() {
+            const duration = 15000;
+            const end = Date.now() + duration;
+        
+            const colors = ['#FFFFFF', '#FFFACD', '#FFD700'];
+        
+            const snowScalar = 1.8;
+        
+            (function snow() {
+                confetti({
+                    particleCount: 8,
+                    startVelocity: 0,
+                    spread: 120,
+                    gravity: 0.3,
+                    ticks: 200,
+                    scalar: snowScalar,
+                    colors,
+                    origin: { x: Math.random(), y: -0.2 },
+                    shapes: ['circle']
+                });
+        
+                if (Date.now() < end) {
+                    requestAnimationFrame(snow);
+                }
+            })();
+        
+            setInterval(() => {
+                confetti({
+                    particleCount: 60,
+                    spread: 360,
+                    startVelocity: 35,
+                    gravity: 1,
+                    scalar: snowScalar,
+                    colors: ['#FFD700', '#FFFACD'],
+                    shapes: ['star'],
+                    origin: { x: Math.random(), y: Math.random() * 0.4 }
+                });
+            }, 1200);
+        }
+
 
 
 
