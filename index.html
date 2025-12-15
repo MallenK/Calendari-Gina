@@ -334,6 +334,8 @@
         </div>
     </div>
 
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
         /* =========================================== */
         /* === ESTRUCTURA DE CONTINGUT PERSONALITZABLE (CATALÀ) === */
@@ -523,6 +525,11 @@
             modalTitle.textContent = `Dia ${day}`;
             modalMessage.textContent = FRASES_DIARIES[contentIndex];
 
+            // Celebración especial para días 5 y 16
+            if (day === 5 || day === 16) {
+                lanzarCelebracion();
+            }
+
             // Todas las combinaciones posibles
             const candidates = [
                 `images/IMG-${day}.jpg`,
@@ -587,6 +594,29 @@
                 modalOverlay.style.display = 'none';
             }, 300);
         }
+
+        function lanzarCelebracion() {
+            const duration = 3000;
+            const end = Date.now() + duration;
+        
+            (function frame() {
+                confetti({
+                    particleCount: 8,
+                    startVelocity: 25,
+                    spread: 360,
+                    ticks: 60,
+                    origin: {
+                        x: Math.random(),
+                        y: Math.random() - 0.2
+                    }
+                });
+        
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            })();
+        }
+
 
         // Assignar esdeveniments per tancar el modal
         closeModalButton.addEventListener('click', closeDayContent);
