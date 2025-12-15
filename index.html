@@ -538,7 +538,7 @@
             modalTitle.textContent = `Dia ${day}`;
             modalMessage.textContent = FRASES_DIARIES[contentIndex];
 
-            if (day === 16) {
+            if (day === 16 || day === 5) {
                 modalOverlay.querySelector('.modal-content')
                     .classList.add('celebrating');
             
