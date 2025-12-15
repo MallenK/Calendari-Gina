@@ -741,21 +741,24 @@
             const snowColors = ['#FFFFFF', '#F5F5F5', '#E0E0E0'];
             const starColors = ['#FFD700', '#FFFACD', '#FFECB3'];
         
-            const snowSize = 2.6;   // nieve MUY grande
-            const starSize = 2.4;   // estrellas grandes
+            const snowSize = 2.6;
+            const starSize = 2.4;
+        
+            let wind = 0;
         
             /* =============================== */
-            /* ❄️ NIEVE PROTAGONISTA CONTINUA */
+            /* ❄️ NIEVE PRINCIPAL CON VIENTO */
             /* =============================== */
             (function snowStorm() {
                 confetti({
-                    particleCount: 20,        // más copos por frame
+                    particleCount: 12,
                     startVelocity: 0,
-                    gravity: 0.58,            // caída muy lenta
+                    gravity: 0.18,
                     ticks: 400,
                     scalar: snowSize,
                     colors: snowColors,
                     shapes: ['circle'],
+                    drift: wind,
                     origin: {
                         x: Math.random(),
                         y: -0.25
@@ -767,9 +770,14 @@
                 }
             })();
         
-            /* ================================== */
-            /* ⭐ LLUVIAS DE ESTRELLAS CONSTANTES */
-            /* ================================== */
+            /* 🌬️ OSCILACIÓN DEL VIENTO */
+            const windInterval = setInterval(() => {
+                wind = Math.sin(Date.now() / 1800) * 0.6;
+            }, 300);
+        
+            /* =============================== */
+            /* ⭐ LLUVIA DE ESTRELLAS */
+            /* =============================== */
             const starRain = setInterval(() => {
                 confetti({
                     particleCount: 80,
@@ -787,9 +795,9 @@
                 });
             }, 900);
         
-            /* ===================================== */
-            /* ⭐ EXPLOSIONES DORADAS CENTRALES */
-            /* ===================================== */
+            /* =============================== */
+            /* ⭐ EXPLOSIONES DORADAS */
+            /* =============================== */
             const goldenBursts = setInterval(() => {
                 confetti({
                     particleCount: 200,
@@ -806,76 +814,124 @@
                 });
             }, 2500);
         
-            /* === STOP === */
+            /* ✨ DESTELLOS MÁGICOS */
+            const sparkles = setInterval(() => {
+                confetti({
+                    particleCount: 30,
+                    spread: 360,
+                    startVelocity: 8,
+                    gravity: 0.2,
+                    ticks: 120,
+                    scalar: 0.8,
+                    colors: ['#FFFACD', '#FFD700'],
+                    shapes: ['circle'],
+                    origin: {
+                        x: Math.random(),
+                        y: Math.random()
+                    }
+                });
+            }, 1300);
+        
+            /* ❄️ COPOS GIGANTES OCASIONALES */
+            const giantSnowflakes = setInterval(() => {
+                confetti({
+                    particleCount: 3,
+                    startVelocity: 0,
+                    gravity: 0.15,
+                    ticks: 500,
+                    scalar: 3.5,
+                    colors: ['#FFFFFF'],
+                    shapes: ['circle'],
+                    origin: {
+                        x: Math.random(),
+                        y: -0.3
+                    }
+                });
+            }, 4000);
+        
+            /* 🛑 STOP */
             setTimeout(() => {
+                clearInterval(windInterval);
                 clearInterval(starRain);
                 clearInterval(goldenBursts);
+                clearInterval(sparkles);
+                clearInterval(giantSnowflakes);
             }, duration);
         }
 
 
+
         function lanzarAnyNou() {
-            const duration = 22000;
+            const duration = 26000; // más duración
             const end = Date.now() + duration;
         
             const colors = [
-                '#FFD700',
-                '#FF4081',
-                '#FFFFFF',
-                '#00E5FF',
-                '#B71C1C'
+                '#FFD700', // dorado
+                '#FF4081', // rosa
+                '#FFFFFF', // blanco
+                '#00E5FF', // azul
+                '#B71C1C'  // rojo
             ];
         
-            const big = 2.3;
+            const big = 2.4;
         
+            /* =============================== */
+            /* 🎆 FUEGOS ARTIFICIALES CENTRALES */
+            /* =============================== */
             function megaFirework() {
                 confetti({
-                    particleCount: 300,
+                    particleCount: 320,
                     spread: 360,
-                    startVelocity: 70,
+                    startVelocity: 75,
                     gravity: 0.9,
                     scalar: big,
                     colors,
                     origin: {
                         x: Math.random(),
-                        y: Math.random() * 0.5
+                        y: Math.random() * 0.45
                     }
                 });
             }
         
             megaFirework();
+            const fireworks = setInterval(megaFirework, 1000);
         
-            const fireworks = setInterval(megaFirework, 1100);
-        
-            /* 🎊 CAÑONES CONTINUOS */
+            /* =============================== */
+            /* 🎊 CAÑONES LATERALES DOBLES */
+            /* =============================== */
             const cannons = setInterval(() => {
                 confetti({
-                    particleCount: 200,
-                    angle: 60,
-                    spread: 80,
-                    startVelocity: 55,
+                    particleCount: 220,
+                    angle: 55,
+                    spread: 85,
+                    startVelocity: 60,
+                    gravity: 1,
                     scalar: big,
                     colors,
                     origin: { x: 0 }
                 });
         
                 confetti({
-                    particleCount: 200,
-                    angle: 120,
-                    spread: 80,
-                    startVelocity: 55,
+                    particleCount: 220,
+                    angle: 125,
+                    spread: 85,
+                    startVelocity: 60,
+                    gravity: 1,
                     scalar: big,
                     colors,
                     origin: { x: 1 }
                 });
-            }, 1500);
+            }, 1400);
         
-            /* ❤️ + ⭐ EXTRA */
+            /* =============================== */
+            /* ❤️⭐ CORAZONES Y ESTRELLAS */
+            /* =============================== */
             const extras = setInterval(() => {
                 confetti({
-                    particleCount: 100,
+                    particleCount: 140,
                     spread: 360,
-                    startVelocity: 35,
+                    startVelocity: 40,
+                    gravity: 0.8,
                     scalar: big,
                     shapes: ['heart', 'star'],
                     colors,
@@ -884,12 +940,54 @@
                         y: Math.random() * 0.4
                     }
                 });
-            }, 2000);
+            }, 1800);
         
+            /* =============================== */
+            /* ✨ DESTELLOS RÁPIDOS */
+            /* =============================== */
+            const sparkles = setInterval(() => {
+                confetti({
+                    particleCount: 40,
+                    spread: 360,
+                    startVelocity: 10,
+                    gravity: 0.3,
+                    ticks: 100,
+                    scalar: 0.9,
+                    colors: ['#FFFFFF', '#FFD700'],
+                    shapes: ['circle'],
+                    origin: {
+                        x: Math.random(),
+                        y: Math.random()
+                    }
+                });
+            }, 1200);
+        
+            /* =============================== */
+            /* 🎇 COHETES ASCENDENTES */
+            /* =============================== */
+            const rockets = setInterval(() => {
+                confetti({
+                    particleCount: 120,
+                    angle: 90,
+                    spread: 25,
+                    startVelocity: 70,
+                    gravity: 1.1,
+                    scalar: big,
+                    colors,
+                    origin: {
+                        x: Math.random(),
+                        y: 1
+                    }
+                });
+            }, 2200);
+        
+            /* 🛑 STOP */
             setTimeout(() => {
                 clearInterval(fireworks);
                 clearInterval(cannons);
                 clearInterval(extras);
+                clearInterval(sparkles);
+                clearInterval(rockets);
             }, duration);
         }
 
