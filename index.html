@@ -735,84 +735,81 @@
 
 
         function lanzarNavidad() {
-            const duration = 20000;
+            const duration = 30000; // 30 segundos
             const end = Date.now() + duration;
         
-            const snowColors = ['#FFFFFF', '#F5F5F5'];
-            const goldColors = ['#FFD700', '#FFFACD'];
-            const loveColors = ['#FF4081', '#E57373'];
+            const snowColors = ['#FFFFFF', '#F5F5F5', '#E0E0E0'];
+            const starColors = ['#FFD700', '#FFFACD', '#FFECB3'];
         
-            const big = 2.2; // tamaño GRANDE
+            const snowSize = 2.6;   // nieve MUY grande
+            const starSize = 2.4;   // estrellas grandes
         
-            /* ❄️ NIEVE GRANDE Y LENTA */
-            (function snow() {
+            /* =============================== */
+            /* ❄️ NIEVE PROTAGONISTA CONTINUA */
+            /* =============================== */
+            (function snowStorm() {
                 confetti({
-                    particleCount: 20,
-                    startVelocity: 50,
-                    gravity: 0.25,
+                    particleCount: 20,        // más copos por frame
+                    startVelocity: 0,
+                    gravity: 0.58,            // caída muy lenta
                     ticks: 400,
-                    scalar: big,
+                    scalar: snowSize,
                     colors: snowColors,
                     shapes: ['circle'],
-                    origin: { x: Math.random(), y: -0.2 }
+                    origin: {
+                        x: Math.random(),
+                        y: -0.25
+                    }
                 });
         
-                if (Date.now() < end) requestAnimationFrame(snow);
+                if (Date.now() < end) {
+                    requestAnimationFrame(snowStorm);
+                }
             })();
         
-            /* ⭐ ESTRELLAS DORADAS */
-            const stars = setInterval(() => {
+            /* ================================== */
+            /* ⭐ LLUVIAS DE ESTRELLAS CONSTANTES */
+            /* ================================== */
+            const starRain = setInterval(() => {
                 confetti({
-                    particleCount: 25,
-                    spread: 360,
+                    particleCount: 80,
+                    spread: 140,
                     startVelocity: 20,
-                    gravity: 0.9,
-                    scalar: big,
-                    colors: goldColors,
+                    gravity: 0.7,
+                    ticks: 220,
+                    scalar: starSize,
+                    colors: starColors,
                     shapes: ['star'],
                     origin: {
                         x: Math.random(),
-                        y: Math.random() * 0.4
+                        y: -0.2
                     }
                 });
-            }, 1400);
+            }, 900);
         
-            /* 🎁 REGALOS (cuadrados grandes) */
-            const gifts = setInterval(() => {
+            /* ===================================== */
+            /* ⭐ EXPLOSIONES DORADAS CENTRALES */
+            /* ===================================== */
+            const goldenBursts = setInterval(() => {
                 confetti({
-                    particleCount: 30,
-                    angle: 90,
-                    spread: 100,
-                    startVelocity: 25,
-                    gravity: 1.4,
-                    scalar: big,
-                    colors: ['#B71C1C', '#FFD700', '#FFFFFF'],
-                    shapes: ['square'],
-                    origin: { x: Math.random(), y: -0.2 }
-                });
-            }, 1600);
-        
-            /* ❤️ CORAZONES GRANDES */
-            const hearts = setInterval(() => {
-                confetti({
-                    particleCount: 25,
-                    spread: 80,
-                    startVelocity: 20,
-                    gravity: 0.6,
-                    scalar: big,
-                    colors: loveColors,
-                    shapes: ['heart'],
+                    particleCount: 200,
+                    spread: 360,
+                    startVelocity: 35,
+                    gravity: 0.9,
+                    scalar: starSize,
+                    colors: starColors,
+                    shapes: ['star'],
                     origin: {
                         x: Math.random(),
-                        y: Math.random() * 0.3
+                        y: Math.random() * 0.35
                     }
                 });
-            }, 2000);
+            }, 2500);
         
+            /* === STOP === */
             setTimeout(() => {
-                clearInterval(stars);
-                clearInterval(gifts);
-                clearInterval(hearts);
+                clearInterval(starRain);
+                clearInterval(goldenBursts);
             }, duration);
         }
 
