@@ -499,6 +499,7 @@
                 dayElement.classList.add('day');
                 dayElement.dataset.day = day;
 
+                /*
                 let isLocked = true;
                 
                 // Lògica de desbloqueig: desbloquejat si el dia és menor o igual al dia actual (real o de test)
@@ -512,6 +513,12 @@
                 } else {
                     dayElement.classList.add('locked'); // Dia futur bloquejat
                 }
+
+                */
+
+                let isLocked = false;
+
+                dayElement.classList.add('unlocked');
                 
                 // Assignar el gestor d'esdeveniments només als dies desbloquejats
                 if (!isLocked) {
